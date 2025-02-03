@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "218095244490",
+    "project_id": "recommendation-app-3c6d6",
+    "storage_bucket": "recommendation-app-3c6d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218095244490:android:930efef1d4b1054ac31033",
+        "android_client_info": {
+          "package_name": "com.example.recommendation_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLvFoh_OIfcSRzYY_n8E92C9183RQHkaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
