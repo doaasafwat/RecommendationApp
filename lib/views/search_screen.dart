@@ -10,17 +10,14 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> filteredProducts = products.where((product) {
-      String productName = product['Product Name'] ?? '';
-      return productName.toLowerCase().contains(searchQuery.toLowerCase());
-    }).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Search Results"),
         centerTitle: true,
       ),
-      body: SearchItemListView(filteredProducts: filteredProducts),
+      body: products.isEmpty
+          ? const Center(child: Text("No results found."))
+          : SearchItemListView(filteredProducts: products),
     );
   }
 }

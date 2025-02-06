@@ -12,7 +12,8 @@ class SimilarProducts extends StatelessWidget {
     'https://m.media-amazon.com/images/I/51Cida8RecL.__AC_SX300_SY300_QL70_ML2_.jpg',
   ];
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
+    
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {

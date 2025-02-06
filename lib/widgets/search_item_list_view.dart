@@ -41,7 +41,9 @@ class SearchItemListView extends StatelessWidget {
               productName: filteredProducts[index]['Product Name'] ?? '',
               numberOfReviews:
                   filteredProducts[index]['Number of Reviews'] ?? '100',
-              price: filteredProducts[index]['Price'] ?? 10000,
+              price: (filteredProducts[index]['Price'] is int)
+                  ? (filteredProducts[index]['Price'] as int).toDouble()
+                  : (filteredProducts[index]['Price'] ?? 10000),
               rating: filteredProducts[index]['Rating'] ?? '4',
             ),
           );

@@ -65,9 +65,9 @@ class ProductCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '$price'.split('.')[0],
+                      '$price US',
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),

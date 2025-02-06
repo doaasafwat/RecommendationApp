@@ -34,7 +34,10 @@ class ProductCardListView extends StatelessWidget {
               image: productList[index]['Image URL'] ?? '',
               productName: productList[index]['Product Name'] ?? '',
               numberOfReviews: productList[index]['Number of Reviews'] ?? '100',
-              price: productList[index]['Price'] ?? 10000,
+             
+               price: (productList[index]['Price'] is int)
+                  ? (productList[index]['Price'] as int).toDouble()
+                  : (productList[index]['Price'] ?? 10000),
               rating: productList[index]['Rating'] ?? '4',
             ),
           );

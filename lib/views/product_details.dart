@@ -142,7 +142,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        '${currentImageIndex + 1}/1}',
+                        '${currentImageIndex + 1}/1',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
@@ -163,7 +163,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Row(
                 children: [
                   Text(
-                    '${widget.product['Price'] ?? 10000}EGP',
+                    '${widget.product['Price'] ?? 10000}US',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
