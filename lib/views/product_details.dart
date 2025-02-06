@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:recommendation_app/Api/api_services.dart';
 import 'package:recommendation_app/widgets/similar_product.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -13,11 +15,12 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int currentImageIndex = 0;
   List<Map<String, String>> specifications = [];
-
+  List<Map<String, dynamic>> similarProductDetails = [];
+  bool isLoadingSimilarProducts = true;
   @override
   void initState() {
     super.initState();
-
+     _fetchSimilarProducts();
     specifications = [
       {
         'Feature': 'Product Name',
@@ -69,7 +72,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       },
     ];
   }
+   Future<void> _fetchSimilarProducts() async {
+    try {
+      List<String> similarProductNames =
+          await ApiService.fetchSimilarProduct(widget.product['Brand Name'], context);
 
+      await _fetchProductDetailsFromFirestore(similarProductNames);
+    } catch (e) {
+      setState(() {
+        isLoadingSimilarProducts = false;
+      });
+    }
+  }
+
+
+  Future<void> _fetchProductDetailsFromFirestore(List<String> productNames) async {
+    List<Map<String, dynamic>> productList = [];
+
+    for (String name in productNames) {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .where('Product Name', isEqualTo: name)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        productList.add(querySnapshot.docs.first.data());
+      }
+    }
+
+    setState(() {
+      similarProductDetails = productList;
+      isLoadingSimilarProducts = false;
+    });
+  }
   int selectedShippingIndex = 0;
   int selectedColorIndex = 0;
   int selectedStrogeIndex = 0;
@@ -163,9 +198,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Row(
                 children: [
                   Text(
-                    '${widget.product['Price'] ?? 10000}US',
+                    '${widget.product['Price'] ?? 10000}EGP',
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -236,7 +271,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ],
               ),
-              SimilarProducts(),
+          isLoadingSimilarProducts
+                ? const Center(child: CircularProgressIndicator(
+                  color: Colors.orange,
+                ))
+                : SimilarProducts(products: similarProductDetails),
               Row(
                 children: [
                   Padding(

@@ -7,9 +7,20 @@ import 'package:recommendation_app/widgets/indicator_dot.dart';
 import 'package:recommendation_app/widgets/offer_product.dart';
 import 'package:recommendation_app/widgets/product_card_list_view.dart';
 import 'package:recommendation_app/widgets/section_title.dart';
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
-class HomeScreen extends StatelessWidget {
+class _HomeScreenState extends State<HomeScreen> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  bool isLoading = false; 
+
+  void setLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,23 +59,11 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.white.withOpacity(0.8),
-                  const Color(0xffFFA160).withOpacity(0.7),
-                ],
-                begin: Alignment.center,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
           SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomTextField(),
+                CustomTextField(setLoading: setLoading),
                 Center(child: BannerWidget()),
                 const SizedBox(height: 10),
                 Center(
@@ -81,42 +80,10 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const SectionTitle(title: 'Winter Offers'),
-                StreamBuilder<QuerySnapshot>(
-                  stream: firestore.collection('products').snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return const Center(child: Text('No products'));
-                    }
-
-                    var products = snapshot.data!.docs
-                        .map((doc) => doc.data() as Map<String, dynamic>)
-                        .toList();
-
-                    return OfferProduct(products: products);
-                  },
-                ),
+                _buildProductList(),
                 const SectionTitle(title: 'Weekly Offers'),
-                StreamBuilder<QuerySnapshot>(
-                  stream: firestore.collection('products').snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return const Center(child: Text('No products'));
-                    }
-
-                    var products = snapshot.data!.docs
-                        .map((doc) => doc.data() as Map<String, dynamic>)
-                        .toList();
-
-                    return OfferProduct(products: products);
-                  },
-                ),
-                const SectionTitle(title: 'Explore'),
+                _buildProductList(),
+             const SectionTitle(title: 'Explore'),
                 StreamBuilder<QuerySnapshot>(
                   stream: firestore.collection('products').snapshots(),
                   builder: (context, snapshot) {
@@ -139,35 +106,53 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+
+          if (isLoading)
+          const   Positioned.fill(
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.orange, 
+                ),
+              ),
+            ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xffFF7C21),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(LucideIcons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(LucideIcons.fileText),
-            label: 'Invoice',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(LucideIcons.heart),
-            label: 'Wishlist',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(LucideIcons.shoppingCart),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(LucideIcons.user),
-            label: 'Account',
-          ),
-        ],
-      ),
+      bottomNavigationBar: _buildBottomNav(),
+    );
+  }
+
+  Widget _buildProductList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: firestore.collection('products').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No products'));
+        }
+
+        var products = snapshot.data!.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList();
+
+        return OfferProduct(products: products);
+      },
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: const Color(0xffFF7C21),
+      unselectedItemColor: Colors.grey,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(LucideIcons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(LucideIcons.fileText), label: 'Invoice'),
+        BottomNavigationBarItem(icon: Icon(LucideIcons.heart), label: 'Wishlist'),
+        BottomNavigationBarItem(icon: Icon(LucideIcons.shoppingCart), label: 'Cart'),
+        BottomNavigationBarItem(icon: Icon(LucideIcons.user), label: 'Account'),
+      ],
     );
   }
 }

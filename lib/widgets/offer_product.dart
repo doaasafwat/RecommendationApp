@@ -33,7 +33,7 @@ class OfferProduct extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '${product['Price'] ?? 10000} US',
+                  '${product['Price'] ?? 10000} EGP',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

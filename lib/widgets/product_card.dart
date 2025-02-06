@@ -65,7 +65,7 @@ class ProductCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '$price US',
+                      '$price EGP',
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
@@ -76,7 +76,7 @@ class ProductCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      '($numberOfReviews)',
+                      numberOfReviews.split(',')[0],
                       style: const TextStyle(
                         fontSize: 8,
                         color: Colors.grey,
